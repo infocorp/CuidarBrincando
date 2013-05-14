@@ -24,6 +24,7 @@ class Welcome extends CI_Controller {
 			'form_validation',
 		));
 		$this->load->helper('url');
+		$this->load->view('header');
 		$this->load->view('login_view');
 	}
 }
