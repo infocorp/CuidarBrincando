@@ -20,9 +20,10 @@ class Welcome extends CI_Controller {
 	public function index()
 	{
 		$this->load->library(array(
-			'url',
+			'session',
 			'form_validation',
 		));
+		$this->load->helper('url');
 		$this->load->view('login_view');
 	}
 }
