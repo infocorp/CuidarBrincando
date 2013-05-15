@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tempo de Geração: 13/05/2013 às 15:58:14
+-- Tempo de Geração: 15/05/2013 às 14:55:43
 -- Versão do Servidor: 5.5.31
 -- Versão do PHP: 5.4.6-1ubuntu1.2
 
@@ -28,9 +28,9 @@ SET time_zone = "+00:00";
 
 CREATE TABLE IF NOT EXISTS `administrador` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `login` varchar(45) NOT NULL,
-  `senha` varchar(45) NOT NULL,
-  PRIMARY KEY (`id`)
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_administrador_user1` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS `administrador` (
 CREATE TABLE IF NOT EXISTS `crianca` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `escola` varchar(50) DEFAULT NULL,
+  `serie` varchar(45) DEFAULT NULL,
   `diagnostico` varchar(50) NOT NULL,
   `dataInternacao` datetime NOT NULL,
   `dataAlta` datetime DEFAULT NULL,
@@ -75,16 +76,18 @@ CREATE TABLE IF NOT EXISTS `crianca_responsavel` (
 
 CREATE TABLE IF NOT EXISTS `educador` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pessoa_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `curso` varchar(50) NOT NULL,
-  `semestre` varchar(6) NOT NULL,
+  `semestreEntrada` varchar(6) NOT NULL,
+  `rga` varchar(15) NOT NULL,
   `renda` varchar(30) NOT NULL,
   `curriculo` text NOT NULL,
   `bolsista` tinyint(4) NOT NULL,
   `tipoBolsa` varchar(50) DEFAULT NULL,
-  `pessoa_id` int(11) NOT NULL,
-  `senha` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_educador_pessoa1` (`pessoa_id`)
+  KEY `fk_educador_pessoa1` (`pessoa_id`),
+  KEY `fk_educador_user1` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -105,34 +108,23 @@ CREATE TABLE IF NOT EXISTS `endereco` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `frequencia`
---
-
-CREATE TABLE IF NOT EXISTS `frequencia` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `educador_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_frequencia_educador1` (`educador_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
 -- Estrutura da tabela `pessoa`
 --
 
 CREATE TABLE IF NOT EXISTS `pessoa` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `endereco_id` int(11) NOT NULL,
   `nome` varchar(255) NOT NULL,
   `telefone` varchar(12) DEFAULT NULL,
-  `email` varchar(50) NOT NULL,
   `apelido` varchar(50) DEFAULT NULL,
   `dataNascimento` varchar(10) NOT NULL,
   `sexo` enum('M','F','I') NOT NULL,
-  `cor` varchar(100) NOT NULL COMMENT 'PR = PRETO\nPA = PARDO\nAM = AMARELO\nBR = BRANCO',
-  `escolaridade` varchar(20) NOT NULL,
+  `cor` enum('PR','PA','AM','BR') NOT NULL COMMENT 'PR = PRETO\nPA = PARDO\nAM = AMARELO\nBR = BRANCO',
+  `escolaridade` enum('N','FI','F','MI','M','SI','S') NOT NULL COMMENT 'N - Nenhum\nFI - Fundamental Incompleto\nF - Fundamental Completo\nMI - Medio incompleto\nM - Medio completo\nSI - Superior incompleto\nS - Superior completo',
   `foto` varchar(45) DEFAULT NULL,
-  `endereco_id` int(11) NOT NULL,
+  `identidade` varchar(15) DEFAULT NULL,
+  `cpf` varchar(15) DEFAULT NULL,
+  `tituloEleitor` varchar(15) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_pessoa_endereco1` (`endereco_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
@@ -145,14 +137,15 @@ CREATE TABLE IF NOT EXISTS `pessoa` (
 
 CREATE TABLE IF NOT EXISTS `professor` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pessoa_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `graduacao` varchar(100) NOT NULL,
   `mestrado` varchar(100) DEFAULT NULL,
   `doutorado` varchar(100) DEFAULT NULL,
   `phd` varchar(100) DEFAULT NULL,
-  `pessoa_id` int(11) NOT NULL,
-  `senha` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_professor_pessoa1` (`pessoa_id`)
+  KEY `fk_professor_pessoa1` (`pessoa_id`),
+  KEY `fk_professor_user1` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -165,9 +158,38 @@ CREATE TABLE IF NOT EXISTS `relatorio` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `texto` text NOT NULL,
   `data` datetime NOT NULL,
-  `comentario` varchar(45) DEFAULT NULL,
+  `feitoPor` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `relatorio_comentario`
+--
+
+CREATE TABLE IF NOT EXISTS `relatorio_comentario` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `relatorio_id` int(11) NOT NULL,
+  `comentario` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_relatorio_comentario_relatorio1` (`relatorio_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `relatorio_crianca`
+--
+
+CREATE TABLE IF NOT EXISTS `relatorio_crianca` (
+  `id` int(11) NOT NULL,
+  `relatorio_id` int(11) NOT NULL,
+  `crianca_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_table1_relatorio1` (`relatorio_id`),
+  KEY `fk_table1_crianca1` (`crianca_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -192,18 +214,55 @@ CREATE TABLE IF NOT EXISTS `relatorio_participante` (
 
 CREATE TABLE IF NOT EXISTS `responsavel` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pessoa_id` int(11) NOT NULL,
   `ajudaFamilia` enum('S','A','N') NOT NULL COMMENT 'S = SEMPRE\nA = ASVEZES\nN = NUNCA',
   `renda` varchar(20) DEFAULT NULL,
   `beneficios` enum('F','M','FA','N') DEFAULT NULL COMMENT 'F = FORTE\nM = MEDIO\nFA = FRACO\nN =  NUNCA',
   `situacaoPsicologica` text,
-  `pessoa_id` int(11) NOT NULL,
+  `email` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_responsavel_pessoa1` (`pessoa_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `responsavel_crianca`
+--
+
+CREATE TABLE IF NOT EXISTS `responsavel_crianca` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `responsavel_id` int(11) NOT NULL,
+  `crianca_id` int(11) NOT NULL,
+  `grauParentesco` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_responsavel_crianca_responsavel1` (`responsavel_id`),
+  KEY `fk_responsavel_crianca_crianca1` (`crianca_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `user`
+--
+
+CREATE TABLE IF NOT EXISTS `user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `email` varchar(45) NOT NULL,
+  `senha` varchar(45) NOT NULL,
+  `tipo` enum('A','P','E','EB') NOT NULL COMMENT 'A - Administrador\nP - Professor\nE - Educador\nEB - Educador Bolsista',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
 -- Restrições para as tabelas dumpadas
 --
+
+--
+-- Restrições para a tabela `administrador`
+--
+ALTER TABLE `administrador`
+  ADD CONSTRAINT `fk_administrador_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Restrições para a tabela `crianca`
@@ -222,13 +281,8 @@ ALTER TABLE `crianca_responsavel`
 -- Restrições para a tabela `educador`
 --
 ALTER TABLE `educador`
-  ADD CONSTRAINT `fk_educador_pessoa1` FOREIGN KEY (`pessoa_id`) REFERENCES `pessoa` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Restrições para a tabela `frequencia`
---
-ALTER TABLE `frequencia`
-  ADD CONSTRAINT `fk_frequencia_educador1` FOREIGN KEY (`educador_id`) REFERENCES `educador` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_educador_pessoa1` FOREIGN KEY (`pessoa_id`) REFERENCES `pessoa` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_educador_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Restrições para a tabela `pessoa`
@@ -240,7 +294,21 @@ ALTER TABLE `pessoa`
 -- Restrições para a tabela `professor`
 --
 ALTER TABLE `professor`
-  ADD CONSTRAINT `fk_professor_pessoa1` FOREIGN KEY (`pessoa_id`) REFERENCES `pessoa` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_professor_pessoa1` FOREIGN KEY (`pessoa_id`) REFERENCES `pessoa` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_professor_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Restrições para a tabela `relatorio_comentario`
+--
+ALTER TABLE `relatorio_comentario`
+  ADD CONSTRAINT `fk_relatorio_comentario_relatorio1` FOREIGN KEY (`relatorio_id`) REFERENCES `relatorio` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Restrições para a tabela `relatorio_crianca`
+--
+ALTER TABLE `relatorio_crianca`
+  ADD CONSTRAINT `fk_table1_relatorio1` FOREIGN KEY (`relatorio_id`) REFERENCES `relatorio` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_table1_crianca1` FOREIGN KEY (`crianca_id`) REFERENCES `crianca` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Restrições para a tabela `relatorio_participante`
@@ -254,6 +322,13 @@ ALTER TABLE `relatorio_participante`
 --
 ALTER TABLE `responsavel`
   ADD CONSTRAINT `fk_responsavel_pessoa1` FOREIGN KEY (`pessoa_id`) REFERENCES `pessoa` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Restrições para a tabela `responsavel_crianca`
+--
+ALTER TABLE `responsavel_crianca`
+  ADD CONSTRAINT `fk_responsavel_crianca_responsavel1` FOREIGN KEY (`responsavel_id`) REFERENCES `responsavel` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_responsavel_crianca_crianca1` FOREIGN KEY (`crianca_id`) REFERENCES `crianca` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
