@@ -22,7 +22,7 @@
         <!-- Password-->
         <label class="control-label" for="password">Senha</label>
         <div class="controls">
-          <input type="password" id="password" name="password" value="<?php echo set_value('username')?>" class="input-xlarge">
+          <input type="password" id="password" name="password" class="input-xlarge">
           <?php echo form_error('password', '<div class="alert alert-error">', '</div>')?>
         </div>
       </div>
