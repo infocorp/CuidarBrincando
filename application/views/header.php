@@ -8,3 +8,10 @@
         <script src="<?php echo base_url()?>public/bootstrap/js/bootstrap.min.js"></script>
     </head>
     <body>
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="nav">
+                    <a class="brand" href="<?php echo site_url('/')?>">Cuidar Brincando</a>
+                </div>
+            </div>
+        </div>
