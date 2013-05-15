@@ -14,9 +14,20 @@ class Auth extends CI_Controller
         $this->load->model('auth_model');
     }
 
+    public function index()
+    {
+        var_dump($this->session->userdata);
+    }
+
     public function login()
     {
         try {
+
+            // Página principal para usuários logados a ser definida
+            if ($this->sessionExists()) {
+                redirect('auth');
+            }
+
             $this->form_validation->set_rules('username', 'Email', 'trim|required|xss_clean|valid_email');
             $this->form_validation->set_rules('password', 'Senha', 'trim|required|xss_clean');
             $this->form_validation->set_message('required', 'O campo %s não pode estar vazio');
@@ -36,12 +47,29 @@ class Auth extends CI_Controller
                 ->setEmail($this->input->post('username'))
                 ->setPassword($this->input->post('password'));
 
-            if ($this->auth_model->verificaLogin($this->user)) {
-                // Autenticar e Autorizar usuário
-            }
+            $user = $this->auth_model->verificaLogin($this->user);
+            $this->session->set_userdata(array(
+                'userid' => $user->id,
+                'email'  => $user->email,
+                'tipo'   => $user->tipo,
+            ));
         } catch (Exception $e) {
             $this->session->set_flashdata('login_feedback', $e->getMessage());
             redirect('/');
         }
+    }
+
+    public function logout()
+    {
+        $this->session->sess_destroy();
+    }
+
+    private function sessionExists()
+    {
+        if ($this->session->userdata('userid')) {
+            return true;
+        }
+
+        return false;
     }
 }

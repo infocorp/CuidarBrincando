@@ -50,7 +50,7 @@ class User
      */
     public function getPassword()
     {
-        return $this->password;
+        return sha1($this->password);
     }
 
     /**
