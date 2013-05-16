@@ -8,6 +8,11 @@ class Pessoa extends CI_Controller
         $this->load->library(array ('form_validation', 'session'));
         $this->form_validation->set_rules('nome', 'Nome', 'required|max_length[255]');
         $this->form_validation->set_rules('dataNascimento', 'Data de Nascimento', 'required|max_length[10]');
+        $this->form_validation->set_rules('cpf', 'CPF', 'max_length[15]');
+        $this->form_validation->set_rules('identidade', 'Identidade', 'max_length[15]');
+        $this->form_validation->set_rules('tituloEleitor', 'Titulo de Eleitor', 'max_length[15]');
+        $this->form_validation->set_rules('apelido', 'Apelido', 'max_length[50]');
+        $this->form_validation->set_rules('foto', 'Foto', 'max_length[45]');//Arrumar o tamanho no banco
         $this->form_validation->set_rules('sexo', 'Sexo', 'validaSexo');
         $this->form_validation->set_rules('cor', 'Cor', 'validaCor');
         $this->form_validation->set_rules('escolaridade', 'validaEscolaridade');
@@ -18,7 +23,7 @@ class Pessoa extends CI_Controller
     {
         if ($this->form_validation->run() === true) {
             try {
-                $this->cliente_model->save(array(
+                $this->cliente_model->savePessoa(array(
                     $this->input->post('nome'),
                     $this->input->post('telefone'),
                     $this->input->post('apelido'),
@@ -72,7 +77,7 @@ class Pessoa extends CI_Controller
             $pessoa = $this->pessoa_model->getById($id);
             if ($this->input->post()) {
                 if ($this->form_validation->run() === true) {
-                    $this->pessoa_model->update($id, array(
+                    $this->pessoa_model->updatePessoa($id, array(
                         $this->input->post('nome'),
                         $this->input->post('telefone'),
                         $this->input->post('apelido'),
@@ -104,7 +109,7 @@ class Pessoa extends CI_Controller
     public function apagarPessoa($id)
     {
          try {
-            $this->pessoa_model->delete($id);
+            $this->pessoa_model->deletePessoa($id);
             $this->session->set_flashdata('feedback', 'Pessoa excluida com sucesso!');
         } catch (Exception $e) {
             $this->session->set_flashdata('feedback', $e->getMessage());
