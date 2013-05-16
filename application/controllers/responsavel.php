@@ -4,7 +4,11 @@ class Responsavel extends CI_Controller
 {
     public function __construct() {
         parent::__construct();
-        $this->load->model('responsavel_model');
+        $this->load->model(array(
+            'responsavel_model',
+            'pessoa_model',
+            'endereco_model',
+        ));
         $this->load->helper('url_helper');
         $this->load->library(array ('form_validation', 'session'));
         $this->form_validation->set_rules('ajudaFamilia', 'Ajuda Familiar', 'required|ValidaAjudaFamilia');
@@ -12,25 +16,48 @@ class Responsavel extends CI_Controller
         $this->form_validation->set_rules('beneficios', 'Beneficios', 'validaBeneficios');
         $this->form_validation->set_rules('email', 'e-mail', 'max_lenght[45]');
     }
-    
+
     public function cadastrarResponsavel()
     {
-        if ($this->form_validation->run() === true) {
-            try {
-                $this->cliente_model->save(array(
+        try {
+            if ($this->form_validation->run() === true) {
+                $endereco    = array(
+                    $this->input->post('endereco', true),
+                    $this->input->post('cidade', true),
+                    $this->input->post('estado', true),
+                    $this->input->post('pais', true),
+                );
+                $pessoa      = array(
+                    $this->input->post('nome', true),
+                    $this->input->post('telefone', true),
+                    $this->input->post('apelido', true),
+                    $this->input->post('dataNascimento', true),
+                    $this->input->post('sexo', true),
+                    $this->input->post('cor', true),
+                    $this->input->post('escolaridade', true),
+                    $this->input->post('foto', true),
+                    $this->input->post('identidade', true),
+                    $this->input->post('cpf', true),
+                    $this->input->post('tituloEleitor', true),
+                );
+                $responsavel = array(
                     $this->input->post('ajudaFamilia'),
                     $this->input->post('renda'),
                     $this->input->post('beneficios'),
                     $this->input->post('situacaoPsicologica'),
                     $this->input->post('email'),
-                ));   
-                
-                $this->session->set_flashdata('message', 'Cadastro feito com sucesso!');
-           } catch (Exception $e) {
-                $this->session->set_flashdata('message', $e->getMessage());
+                );
+
+                $idEndereco = $this->endereco_model->save($endereco);
+                $idPessoa   = $this->pessoa_model->save($pessoa, $idEndereco);
+                $this->responsavel_model->save($responsavel, $idPessoa);   
+            } else {
+                $this->load->view('responsavel_view');
             }
-        } else {
-            $this->load->view('responsavel_view');
+
+            $this->session->set_flashdata('message', 'Cadastro feito com sucesso!');
+        } catch (Exception $e) {
+                $this->session->set_flashdata('message', $e->getMessage());
         }
     }
     

@@ -1,6 +1,6 @@
 <?php
 
-class Pessoa_Model extends CI_Model
+class Responsavel_Model extends CI_Model
 {
     public function __construct() {
         parent::__construct();
@@ -11,23 +11,26 @@ class Pessoa_Model extends CI_Model
      * Salva o cadastro de responsavel sem pessoa e sem endereço.
      * 
      * @param array $info
-     * @return boolean
+     * @param numeric $pessoaId
+     * @return int inserted id
      * @throws RuntimeException
      */
-    public function saveResponsavel(array $info)
+    public function saveResponsavel(array $info, $pessoaId)
     {
         $sql = '
             INSERT INTO 
                 responsavel (
-                    ajudaFamilia, renda, beneficios, situacaoPsicologica, email
+                    ajudaFamilia, renda, beneficios, 
+                    situacaoPsicologica, email, pessoa_id
                 ) VALUES (
-                    ?, ?, ?, ?, ?
+                    ?, ?, ?, ?, ?, ?
                 )
         ';
+        $info[] = $pessoaId;
         $this->db->query($sql, $info);
         
         if ($this->db->affected_rows() == 1) {
-            return true;
+            return $this->db->insert_id();
         }
         
         throw new RuntimeException('Cadastro não efetuado!');
@@ -96,7 +99,7 @@ class Pessoa_Model extends CI_Model
      * Deleta o cadastro de responsavel sem pessoa e sem endereco
      * 
      * @param type $id
-     * @return boolean
+     * @return int id deletado
      * @throws RuntimeException
      */
     public function deleteResponsavel($id)
@@ -107,7 +110,7 @@ class Pessoa_Model extends CI_Model
         $this->db->query($sql, $id);
         
         if ($this->db->affected_rows() == 1) {
-            return true;
+            return (int) $id;
         }
         
         throw new RuntimeException('Erro ao deletar dados de Responsavel!');

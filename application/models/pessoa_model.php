@@ -1,32 +1,29 @@
 <?php
 class Pessoa_Model extends CI_Model
-{
-    public function __construct() {
-        parent::__construct();
-        $this->load->database();
-    }
-    
+{   
     /**
      * Salva o cadastro de pessoa sem endereço.
      * 
-     * @param array $info
-     * @return boolean
+     * @param  array $info
+     * @return int last inserted id
      * @throws RuntimeException
      */
-    public function savePessoa(array $info)
+    public function savePessoa(array $info, $idEndereco)
     {
         $sql = '
             INSERT INTO 
                 pessoa (
-                    nome, telefone, apelido, cor, dataNascimento, sexo, escolaridade, foto, cpf, tituloEleitor, identidade
+                    nome, telefone, apelido, cor, dataNascimento, sexo, 
+                    escolaridade, foto, cpf, tituloEleitor, identidade, endereco_id
                 ) VALUES (
-                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
                 )
         ';
+        $info[] = $idEndereco;
         $this->db->query($sql, $info);
         
         if ($this->db->affected_rows() == 1) {
-            return true;
+            return $this->db->insert_id();
         }
         
         throw new RuntimeException('Cadastro não efetuado!');
@@ -68,7 +65,7 @@ class Pessoa_Model extends CI_Model
     {
         $sql= '
             SELECT
-                nome, telefone, apelido, cor, dataNascimento, sexo, escolaridade, foto, cpf, tituloEleitor, identidade
+                id, nome, telefone, apelido, cor, dataNascimento, sexo, escolaridade, foto, cpf, tituloEleitor, identidade
             FROM
                 pessoa
         ';
@@ -138,5 +135,31 @@ class Pessoa_Model extends CI_Model
         }
         
         throw new RuntimeException('Erro ao deletar pessoa!');
+    }
+
+    /**
+     * Retorna pessoas com o nome passado
+     * 
+     * @param string $name
+     * @throws RuntimeException
+     * @return ResultSet
+     */
+    public function getByName($name)
+    {
+        $query = $this->db->query('
+            SELECT
+                id, nome, telefone, apelido, cor, dataNascimento, sexo, 
+                escolaridade, foto, cpf, tituloEleitor, identidade 
+            FROM
+                pessoa
+            WHERE 
+                nome LIKE "%?%"
+        ', $name);
+
+        if ($query->num_rows() == 0) {
+            throw new RuntimeException('Nenhuma pessoa encontrada');
+        }
+
+        return $query->result();
     }
 }
