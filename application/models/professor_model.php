@@ -1,6 +1,13 @@
 <?php
 class Professor_Model extends CI_Model
 {
+    /**
+     * Cadastra os dados do professor
+     * 
+     * @param array $info
+     * @return boolean
+     * @throws RuntimeException
+     */
     public function save(array $info)
     {
         $sql = '
@@ -24,7 +31,7 @@ class Professor_Model extends CI_Model
      * busca dados de professor sem pessoa e endereço
      * 
      * @param type $id
-     * @return query_row
+     * @return object professor
      * @throws RuntimeException
      */
     public function getById($id)
@@ -46,5 +53,57 @@ class Professor_Model extends CI_Model
         
     }
     
+    /**
+     * Atualiza dados do professor
+     * 
+     * @param type $id
+     * @param array $dados
+     * @return boolean
+     * @throws RuntimeException
+     */
+     public function updateProfessor($id, array $dados)
+    {
+        $sql= '
+            UPDATE
+                professor
+            SET
+                mestrado = ?,
+                phd = ?,
+                graduacao = ?,
+                doutorado = ?
+            WHERE
+                id = ?
+        ';
+        
+        array_push($dados, $id);
+        $this->db->query($sql, $dados);
+        
+        if ($this->db->affected_rows() == 1) {
+            return true;
+        }
+        
+        throw new RuntimeException('Dados não atualizados!');
+    }
+    
+    /**
+     * Apaga os dados do professor
+     * 
+     * @param type $id
+     * @return boolean
+     * @throws RuntimeException
+     */
+    public function deletePessoa($id)
+    {
+        $sql = '
+            DELETE FROM professor WHERE id = ?
+        ';
+        $this->db->query($sql, $id);
+        
+        if ($this->db->affected_rows() == 1) {
+            return true;
+        }
+        
+        throw new RuntimeException('Erro ao deletar professor!');
+    }
     
 }

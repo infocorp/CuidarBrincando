@@ -40,4 +40,53 @@ class Professor extends CI_Controller
         }
     }
     
+    public function mostrarProfessor($id)
+    {
+        try {
+            $professor = $this->professor_model->getById($id);
+            $this->load->view('professor_view', array(
+                'professor' => $professor
+            ));
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+    
+    public function atualizarProfessor($id)
+    {
+        try {
+            $professor = $this->professor_model->getById($id);
+            if ($this->input->post()) {
+                if ($this->form_validation->run() === true) {
+                    $this->professor_model->updateProfessor($id, array(
+                        $this->input->post('mestrado'),
+                        $this->input->post('graduacao'),
+                        $this->input->post('doutorado'),
+                        $this->input->post('phd'),
+                    ));
+                    $this->session->set_flashdata('feedback', 'Dados atualizados com sucesso!');
+                } else {
+                    $this->load->view('professor_view', array(
+                        'professor' => $professor,
+                    ));
+                }
+            } else {
+                $this->load->view('professor_view', array(
+                    'professor' => $professor,
+                ));
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+    
+    public function apagarProfessor($id)
+    {
+         try {
+            $this->professor_model->deleteProfessor($id);
+            $this->session->set_flashdata('feedback', 'Professor excluido com sucesso!');
+        } catch (Exception $e) {
+            $this->session->set_flashdata('feedback', $e->getMessage());
+        }
+    }
 }
