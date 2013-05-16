@@ -36,6 +36,7 @@ class Auth extends CI_Controller
                 ->setEmail($this->input->post('username'))
                 ->setPassword($this->input->post('password'));
 
+            // Cria sessão para usuário
             $user = $this->auth_model->verificaLogin($this->user);
             $this->session->set_userdata(array(
                 'userid' => $user->id,
