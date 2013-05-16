@@ -17,6 +17,33 @@ class Responsavel extends CI_Controller
         $this->form_validation->set_rules('email', 'e-mail', 'max_lenght[45]');
     }
 
+    public function index()
+    {
+        try {
+            $this->load->model('responsavel_model');
+            $this->load->view('header_menu');
+            $this->load->view('painel_responsavel_view', array(
+                'responsaveis' => $this->responsavel_model->getAll(),
+            ));
+            $this->load->view('footer');
+        } catch (Exception $e) {
+            
+        }
+    }
+
+    public function show($id)
+    {
+        try {
+            $this->load->view('header_menu');
+            $this->load->view('show_responsavel_view', array(
+                'responsavel' => $this->responsavel_model->getById($id),
+            ));
+            $this->load->view('footer');
+        } catch (Exception $e) {
+                         
+        }
+    }
+
     public function cadastrarResponsavel()
     {
         try {

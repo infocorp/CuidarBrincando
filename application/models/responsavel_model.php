@@ -35,6 +35,38 @@ class Responsavel_Model extends CI_Model
         
         throw new RuntimeException('Cadastro não efetuado!');
     }
+
+    /**
+     * Recupera todos os responsaveis cadastrados
+     * 
+     * @throws RuntimeException 
+     * @return ResultQuery
+     */
+    public function getAll()
+    {
+        $query = $this->db->query('
+            SELECT
+                responsavel.id, responsavel.ajudaFamilia, responsavel.renda, 
+                responsavel.beneficios, responsavel.situacaoPsicologica, 
+                responsavel.email, pessoa.nome, pessoa.telefone, pessoa.apelido, 
+                pessoa.cor, pessoa.dataNascimento, pessoa.sexo, pessoa.escolaridade, 
+                pessoa.foto, pessoa.cpf, pessoa.tituloEleitor, pessoa.identidade, 
+                pessoa.endereco_id, endereco.endereco, endereco.cidade, endereco.estado, 
+                endereco.pais
+            FROM 
+                responsavel
+            INNER JOIN 
+                pessoa ON pessoa.id = responsavel.pessoa_id
+            INNER JOIN
+                endereco ON endereco.id = pessoa.endereco_id
+        ');
+
+        if ($query->num_rows == 0) {
+            throw new RuntimeException('Nenhum responsável cadastrado');
+        }
+
+        return $query->result();
+    }
     
     /**
      * Pega o responsavel pelo id
@@ -47,11 +79,21 @@ class Responsavel_Model extends CI_Model
     {
         $sql= '
             SELECT
-                ajudaFamilia, renda, beneficios, situacaoPsicologica, email
-            FROM
+                responsavel.id, responsavel.ajudaFamilia, responsavel.renda, 
+                responsavel.beneficios, responsavel.situacaoPsicologica, 
+                responsavel.email, pessoa.nome, pessoa.telefone, pessoa.apelido, 
+                pessoa.cor, pessoa.dataNascimento, pessoa.sexo, pessoa.escolaridade, 
+                pessoa.foto, pessoa.cpf, pessoa.tituloEleitor, pessoa.identidade, 
+                pessoa.endereco_id, endereco.endereco, endereco.cidade, endereco.estado, 
+                endereco.pais
+            FROM 
                 responsavel
+            INNER JOIN 
+                pessoa ON pessoa.id = responsavel.pessoa_id
+            INNER JOIN
+                endereco ON endereco.id = pessoa.endereco_id
             WHERE 
-                id = ?
+                responsavel.id = ?
         ';
         $query = $this->db->query($sql, $id); 
         if ($query->num_rows() > 0 ){

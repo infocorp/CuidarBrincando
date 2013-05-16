@@ -27,7 +27,10 @@
                     <li><a href="<?php echo site_url('painel/relatorio')?>">Relatorios</a></li>
                 </ul>
                 <div class="pull-right">
-                    <a class="btn btn-danger" href="<?php echo site_url('auth/logout')?>">Sair</a>
+                    <a class="btn btn-danger" href="<?php echo site_url('auth/logout')?>">
+                        <i class="icon-off"></i>
+                        Sair
+                    </a>
                 </div>
             </div>
         </div>
