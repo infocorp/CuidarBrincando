@@ -6,7 +6,8 @@ class Professor_Model extends CI_Model
         $sql = '
             INSERT INTO 
                 pessoa (
-                    nome, telefone, email, apelido, dataNascimento, cor, escolaridade, sexo, foto, endereco_id 
+                    nome, telefone, email, apelido, dataNascimento, cor, 
+                    escolaridade, sexo, foto, endereco_id 
                 ) VALUES (
                     ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
                 );
