@@ -23,7 +23,7 @@ class Pessoa extends CI_Controller
     {
         if ($this->form_validation->run() === true) {
             try {
-                $this->cliente_model->save(array(
+                $this->cliente_model->savePessoa(array(
                     $this->input->post('nome'),
                     $this->input->post('telefone'),
                     $this->input->post('apelido'),
@@ -77,7 +77,7 @@ class Pessoa extends CI_Controller
             $pessoa = $this->pessoa_model->getById($id);
             if ($this->input->post()) {
                 if ($this->form_validation->run() === true) {
-                    $this->pessoa_model->update($id, array(
+                    $this->pessoa_model->updatePessoa($id, array(
                         $this->input->post('nome'),
                         $this->input->post('telefone'),
                         $this->input->post('apelido'),
@@ -109,7 +109,7 @@ class Pessoa extends CI_Controller
     public function apagarPessoa($id)
     {
          try {
-            $this->pessoa_model->delete($id);
+            $this->pessoa_model->deletePessoa($id);
             $this->session->set_flashdata('feedback', 'Pessoa excluida com sucesso!');
         } catch (Exception $e) {
             $this->session->set_flashdata('feedback', $e->getMessage());
