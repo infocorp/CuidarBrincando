@@ -4,46 +4,24 @@ class Professor_Model extends CI_Model
     public function save(array $info)
     {
         $sql = '
-            INSERT INTO 
-                pessoa (
-                    nome, telefone, email, apelido, dataNascimento, cor, 
-                    escolaridade, sexo, foto, endereco_id 
-                ) VALUES (
-                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-                );
             INSERT INTO
                 professor (
-                    graduacao, mestrado, doutorado, phd, pessoa_id, senha
+                    graduacao, mestrado, doutorado, phd
                 ) VALUES (
-                    ?, ?, ?, ?, ?, ?
+                    ?, ?, ?, ?
                 )
         ';
-    }
-    
-    /**
-     * Retorna lista de pessoas cadastradas
-     * 
-     * @return object todas as pessoas cadastradas
-     * @throws RuntimeException
-     */
-    public function listname()
-    {
-        $sql= '
-            SELECT
-                id, nome
-            FROM
-                pessoa
-        ';
-        $query = $this->db->query($sql);
-        if ($query->num_rows() > 0 ) {
-               return $query->result();
-        } else {
-            throw new RuntimeException('Não existem pessoas cadastradas.');
+        $this->db->query($sql, $info);
+        
+        if ($this->db->affected_rows() == 1) {
+            return true;
         }
+        
+        throw new RuntimeException('Cadastro dos dados de professor não efetuado!');
     }
     
     /**
-     * busca pessoa por id
+     * busca dados de professor sem pessoa e endereço
      * 
      * @param type $id
      * @return query_row
@@ -53,9 +31,9 @@ class Professor_Model extends CI_Model
     {
         $sql= '
             SELECT
-                id, nome 
+                graduacao, mestrado, doutorado, phd 
             FROM
-                pessoa
+                professor
             WHERE 
                 id = ?
         ';
@@ -63,7 +41,7 @@ class Professor_Model extends CI_Model
         if ($query->num_rows() > 0 ){
             return $query->row();
         } else {
-            throw new RuntimeException('Pessoa não encontrada!');
+            throw new RuntimeException('Dados de professor não encontrado!');
         }
         
     }
