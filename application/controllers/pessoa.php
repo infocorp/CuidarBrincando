@@ -30,7 +30,7 @@ class Pessoa extends CI_Controller
                     $this->input->post('identidade'),
                     $this->input->post('cpf'),
                     $this->input->post('tituloEleitor'),
-                     ));   
+                ));   
                 
                 $this->session->set_flashdata('message', 'Cadastro feito com sucesso!');
            } catch (Exception $e) {

@@ -33,7 +33,7 @@ class Pessoa_Model extends CI_Model
     }
     
     /**
-     * Pega a pessoa pelo id
+     * Pega a pessoa pelo id sem endereco
      * 
      * @param type $id
      * @return object pessoa
@@ -59,7 +59,7 @@ class Pessoa_Model extends CI_Model
     }
     
     /**
-     * Lista todas as pessoas cadastradas.
+     * Lista todas as pessoas cadastradas sem endereco.
      * 
      * @return type
      * @throws RuntimeException
@@ -81,7 +81,7 @@ class Pessoa_Model extends CI_Model
     }
     
     /**
-     * Atualiza o cadastro de pessoa
+     * Atualiza o cadastro de pessoa sem endereco
      * 
      * @param type $id
      * @param array $dados
@@ -120,7 +120,7 @@ class Pessoa_Model extends CI_Model
     }
     
     /**
-     * Deleta o cadastro de pessoa
+     * Deleta o cadastro de pessoa sem endereco
      * 
      * @param type $id
      * @return boolean
