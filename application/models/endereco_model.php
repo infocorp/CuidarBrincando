@@ -5,7 +5,7 @@ class Endereco_Model extends CI_Model
      * Cadastra endereço de uma pessoa
      * 
      * @param array $info
-     * @return boolean
+     * @return int inserted id
      * @throws RuntimeException
      */
     public function save(array $info )
@@ -22,7 +22,7 @@ class Endereco_Model extends CI_Model
         $this->db->query ($sql, $info);
         
         if ($this->db->affected_rows() == 1) {
-            return true;
+            return $this->db->insert_id();
         }
         
         throw new RuntimeException('Endereço não cadastrado!');
@@ -85,6 +85,26 @@ class Endereco_Model extends CI_Model
         }
         
         throw new RuntimeException('Endereço não atualizado!');
+    }
+
+    /**
+     * Remove registro de endereço pelo id
+     * 
+     * @param numeric id
+     * @throws RuntimeException
+     * @return int last inserted id
+     */
+    public function deleteAddress($id)
+    {
+        $this->db->query('
+            DELETE FROM endereco WHERE id = ?
+        ', $id);
+
+        if ($this->db->affected_rows() != 1) {
+            throw new RuntimeException('Ocorreu um erro ao deletar endereço');
+        }
+
+        return $this->db->insert_id();
     }
     
 }
