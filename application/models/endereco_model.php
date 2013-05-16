@@ -1,11 +1,6 @@
 <?php
 class Endereco_Model extends CI_Model
-{
-    public function __construct() {
-        parent::__construct();
-        $this->load->database();
-    }
-    
+{   
     /**
      * Cadastra endereço de uma pessoa
      * 

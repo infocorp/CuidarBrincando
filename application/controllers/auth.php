@@ -5,27 +5,16 @@ class Auth extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        // Carrega Helpers, Libraries e Auth_Model
-        $this->load->library(array(
-            'session',
-            'form_validation',
-        ));
-        $this->load->helper('url');
+        $this->load->library('form_validation')
         $this->load->model('auth_model');
-    }
-
-    public function index()
-    {
-        var_dump($this->session->userdata);
     }
 
     public function login()
     {
         try {
 
-            // Página principal para usuários logados a ser definida
             if ($this->sessionExists()) {
-                redirect('auth');
+                redirect('painel');
             }
 
             $this->form_validation->set_rules('username', 'Email', 'trim|required|xss_clean|valid_email');
@@ -53,6 +42,7 @@ class Auth extends CI_Controller
                 'email'  => $user->email,
                 'tipo'   => $user->tipo,
             ));
+            redirect('/painel');
         } catch (Exception $e) {
             $this->session->set_flashdata('login_feedback', $e->getMessage());
             redirect('/');
