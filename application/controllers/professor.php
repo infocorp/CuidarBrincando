@@ -23,7 +23,7 @@ class Professor extends CI_Controller
         
         if ($this->form_validation->run() === true) {
             try {
-                $this->cliente_model->save(array(
+                $this->professor_model->save(array(
                     $this->input->post('graduacao'),
                     $this->input->post('mestrado'),
                     $this->input->post('doutorado'),
