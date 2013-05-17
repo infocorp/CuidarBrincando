@@ -9,8 +9,7 @@ class Responsavel extends CI_Controller
             'pessoa_model',
             'endereco_model',
         ));
-        $this->load->helper('url_helper');
-        $this->load->library(array ('form_validation', 'session'));
+        $this->load->library('form_validation');
         $this->form_validation->set_rules('ajudaFamilia', 'Ajuda Familiar', 'required|ValidaAjudaFamilia');
         $this->form_validation->set_rules('renda', 'Renda', 'max_length[20]');
         $this->form_validation->set_rules('beneficios', 'Beneficios', 'validaBeneficios');
@@ -27,7 +26,9 @@ class Responsavel extends CI_Controller
             ));
             $this->load->view('footer');
         } catch (Exception $e) {
-            
+            $this->load->view('painel_responsavel_view', array(
+                'erro' => $e->getMessage(),
+            ));
         }
     }
 
@@ -42,6 +43,13 @@ class Responsavel extends CI_Controller
         } catch (Exception $e) {
                          
         }
+    }
+
+    public function create()
+    {
+        $this->load->view('header_menu');
+        $this->load->view('create_responsavel_view');
+        $this->load->view('footer');
     }
 
     public function cadastrarResponsavel()
@@ -141,7 +149,7 @@ class Responsavel extends CI_Controller
     
     
     
-     public function validaBeneficios($beneficios)
+    public function validaBeneficios($beneficios)
     {
         if ($beneficios == 'F' || $beneficios == 'M' || $beneficios == 'FA' || $beneficios == 'N'){
             return TRUE;

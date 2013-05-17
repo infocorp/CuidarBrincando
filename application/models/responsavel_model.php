@@ -15,7 +15,7 @@ class Responsavel_Model extends CI_Model
      * @return int inserted id
      * @throws RuntimeException
      */
-    public function saveResponsavel(array $info, $pessoaId)
+    public function save(array $info, $pessoaId)
     {
         $sql = '
             INSERT INTO 

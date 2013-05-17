@@ -8,7 +8,7 @@ class Pessoa_Model extends CI_Model
      * @return int last inserted id
      * @throws RuntimeException
      */
-    public function savePessoa(array $info, $idEndereco)
+    public function save(array $info, $idEndereco)
     {
         $sql = '
             INSERT INTO 

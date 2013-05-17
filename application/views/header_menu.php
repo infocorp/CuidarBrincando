@@ -20,7 +20,7 @@
                         <ul class="dropdown-menu">
                             <li><a href="<?php echo site_url('painel/professor')?>">Professor</a></li>
                             <li><a href="<?php echo site_url('painel/educador')?>">Educador</a></li>
-                            <li><a href="<?php echo site_url('painel/responsavel')?>">Responsavel</a></li>
+                            <li><a href="<?php echo site_url('responsavel')?>">Responsavel</a></li>
                             <li><a href="<?php echo site_url('painel/crianca')?>">Crianca</a></li>
                         </ul>
                     </li>
