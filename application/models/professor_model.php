@@ -5,7 +5,7 @@ class Professor_Model extends CI_Model
      * Cadastra os dados do professor
      * 
      * @param array $info
-     * @return boolean
+     * @return int inserted id
      * @throws RuntimeException
      */
     public function save(array $info)
@@ -18,13 +18,15 @@ class Professor_Model extends CI_Model
                     ?, ?, ?, ?
                 )
         ';
+
+        $info[] = $pessoaId;
         $this->db->query($sql, $info);
         
         if ($this->db->affected_rows() == 1) {
-            return true;
+            return $this->db->insert_id();
         }
         
-        throw new RuntimeException('Cadastro dos dados de professor não efetuado!');
+        throw new RuntimeException('Cadastro não efetuado!');
     }
     
     /**
