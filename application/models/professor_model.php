@@ -5,7 +5,7 @@ class Professor_Model extends CI_Model
      * Cadastra os dados do professor
      * 
      * @param array $info
-     * @return boolean
+     * @return int inserted id
      * @throws RuntimeException
      */
     public function save(array $info)
@@ -18,13 +18,15 @@ class Professor_Model extends CI_Model
                     ?, ?, ?, ?
                 )
         ';
+
+        $info[] = $pessoaId;
         $this->db->query($sql, $info);
         
         if ($this->db->affected_rows() == 1) {
-            return true;
+            return $this->db->insert_id();
         }
         
-        throw new RuntimeException('Cadastro dos dados de professor não efetuado!');
+        throw new RuntimeException('Cadastro não efetuado!');
     }
     
     /**
@@ -38,19 +40,59 @@ class Professor_Model extends CI_Model
     {
         $sql= '
             SELECT
-                graduacao, mestrado, doutorado, phd 
-            FROM
+                professor.id, professor.graduacao, professor.mestrado, professor.doutorado,
+                professor.phd, pessoa.nome, pessoa.telefone, pessoa.apelido, 
+                pessoa.cor, pessoa.dataNascimento, pessoa.sexo, pessoa.escolaridade, 
+                pessoa.foto, pessoa.cpf, pessoa.tituloEleitor, pessoa.identidade, 
+                pessoa.endereco_id, endereco.endereco, endereco.cidade, endereco.estado, 
+                endereco.pais
+            FROM 
                 professor
+            INNER JOIN 
+                pessoa ON pessoa.id = professor.pessoa_id
+            INNER JOIN
+                endereco ON endereco.id = pessoa.endereco_id
             WHERE 
-                id = ?
+                professor.id = ?
         ';
         $query = $this->db->query($sql, $id); 
         if ($query->num_rows() > 0 ){
             return $query->row();
         } else {
-            throw new RuntimeException('Dados de professor não encontrado!');
+            throw new RuntimeException('Dados de professor não encontrados!');
         }
-        
+         
+    }
+    
+    /**
+     * Recupera todos os professores cadastrados
+     * 
+     * @throws RuntimeException 
+     * @return ResultQuery
+     */
+    public function getAll()
+    {
+        $query = $this->db->query('
+            SELECT
+                professor.id, professor.graduacao, professor.mestrado, professor.doutorado,
+                professor.phd, pessoa.nome, pessoa.telefone, pessoa.apelido, 
+                pessoa.cor, pessoa.dataNascimento, pessoa.sexo, pessoa.escolaridade, 
+                pessoa.foto, pessoa.cpf, pessoa.tituloEleitor, pessoa.identidade, 
+                pessoa.endereco_id, endereco.endereco, endereco.cidade, endereco.estado, 
+                endereco.pais
+            FROM 
+                professor
+            INNER JOIN 
+                pessoa ON pessoa.id = professor.pessoa_id
+            INNER JOIN
+                endereco ON endereco.id = pessoa.endereco_id
+        ');
+
+        if ($query->num_rows == 0) {
+            throw new RuntimeException('Nenhum professor cadastrado');
+        }
+
+        return $query->result();
     }
     
     /**

@@ -3,7 +3,11 @@ class Professor extends CI_Controller
 {
     public function __construct() {
         parent::__construct();
-        $this->load->model('professor_model');
+        $this->load->model(array(
+            'professor_model',
+            'pessoa_model',
+            'endereco_model',
+        ));
         $this->load->library('form_validation');
         $this->form_validation->set_rules('mestrado', 'Mestrado', 'required|max_length[50]');
         $this->form_validation->set_rules('graduacao', 'Graduação', 'required|max_length[100]');
@@ -18,27 +22,50 @@ class Professor extends CI_Controller
         $this->load->view('professor_view');
     }
     
-    public function cadastrar()
+    public function cadastrarProfessor()
     {
-        
-        if ($this->form_validation->run() === true) {
-            try {
-                $this->professor_model->save(array(
-                    $this->input->post('graduacao'),
-                    $this->input->post('mestrado'),
-                    $this->input->post('doutorado'),
-                    $this->input->post('phd'),
-                ));   
-                
-                $this->session->set_flashdata('message', 'Cadastro feito com sucesso!');
-                redirect('professor'); 
-           } catch (Exception $e) {
-                $this->session->set_flashdata('message', $e->getMessage());
+        try {
+            if ($this->form_validation->run() === true) {
+                $endereco    = array(
+                    $this->input->post('endereco', true),
+                    $this->input->post('cidade', true),
+                    $this->input->post('estado', true),
+                    $this->input->post('pais', true),
+                );
+                $pessoa      = array(
+                    $this->input->post('nome', true),
+                    $this->input->post('telefone', true),
+                    $this->input->post('apelido', true),
+                    $this->input->post('dataNascimento', true),
+                    $this->input->post('sexo', true),
+                    $this->input->post('cor', true),
+                    $this->input->post('escolaridade', true),
+                    $this->input->post('foto', true),
+                    $this->input->post('identidade', true),
+                    $this->input->post('cpf', true),
+                    $this->input->post('tituloEleitor', true),
+                );
+                $professor = array(
+                    $this->input->post('graduacao', true),
+                    $this->input->post('mestrado', true),
+                    $this->input->post('doutorado', true),
+                    $this->input->post('phd', true),
+                );
+
+                $idEndereco = $this->endereco_model->save($endereco);
+                $idPessoa   = $this->pessoa_model->save($pessoa, $idEndereco);
+                $this->professor_model->save($professor, $idPessoa);   
+            } else {
+                $this->load->view('professor_view');
             }
-        } else {
-            $this->load->view('cliente_view');
+
+            $this->session->set_flashdata('message', 'Cadastro feito com sucesso!');
+        } catch (Exception $e) {
+                $this->session->set_flashdata('message', $e->getMessage());
         }
     }
+    
+    
     
     public function mostrarProfessor($id)
     {
@@ -58,13 +85,13 @@ class Professor extends CI_Controller
             $professor = $this->professor_model->getById($id);
             if ($this->input->post()) {
                 if ($this->form_validation->run() === true) {
-                    $this->professor_model->updateProfessor($id, array(
-                        $this->input->post('mestrado'),
+                    $this->professor_model->update($id, array(
                         $this->input->post('graduacao'),
+                        $this->input->post('mestrado'),
                         $this->input->post('doutorado'),
                         $this->input->post('phd'),
                     ));
-                    $this->session->set_flashdata('feedback', 'Dados atualizados com sucesso!');
+                    $this->session->set_flashdata('feedback', 'Dados de professor atualizados com sucesso!');
                 } else {
                     $this->load->view('professor_view', array(
                         'professor' => $professor,
