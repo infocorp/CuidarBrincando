@@ -1,8 +1,23 @@
 <div class="container">
   <div class="row">
     <div class="span3">
-      <img src="<?php echo base_url()?>public/images/avatar_default.png" class="img-polaroid">
-      <a href="#">Editar foto</a>
+      <script src="<?php echo base_url()?>public/bootstrap/js/bootstrap.file-input.js"></script>
+      <script src="<?php echo base_url()?>public/jcrop/js/jquery.Jcrop.min.js"></script>
+      <script src="<?php echo base_url()?>public/js/crop.js"></script>
+      <script>
+        $(document).ready(function(){
+            var crop = new ImageCrop(
+                document.getElementById('foto-handler'),
+                document.getElementById('img-foto')
+            );
+            crop.setCropListener();
+        });
+      </script>
+      <em>Tamanho ideal: 200x200</em>
+      <img src="<?php echo base_url()?>public/images/avatar_default.png" class="img-polaroid" id="img-foto" style="width:200px;height:200px;>
+      <form action="" enctype="multipart/form-data">
+        <input type="file" name="foto" id="foto-handler" title="Editar Foto">
+      </form>
     </div>
     <div class="span9">
       <form class="form-horizontal" action="<?php echo site_url('responsavel/cadastrarResponsavel')?>" method="POST" enctype="multipar/form-data">
