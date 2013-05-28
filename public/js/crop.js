@@ -1,21 +1,31 @@
-function ImageCrop(target, wrap) {
+function ImageCrop(target, wrap, modal) {
   this.target = target;
   this.wrap   = wrap;
+  this.modal  = modal;
+  // Recupera o objeto img de dentro do modal, nao do jeito mais elegante...
+  this.modalWrap = document.getElementById(modal.id).
+    getElementsByTagName('div').item(1).
+    getElementsByTagName('img').item(0);
+  this.setCropListener();
 }
         
 ImageCrop.prototype.setCropListener = function() {
-  var target = this.target;
-  var wrap   = this.wrap;
-  this.target.addEventListener('change', function(e){
+  var modal = this.modal;
+  var modalWrap = this.modalWrap;
+  var self = this;
+
+  this.target.addEventListener('change', function(e) {
     var file   = e.currentTarget.files[0];
     var reader = new FileReader();
     
-    reader.onload = (function(imageFile){
+    reader.onload = (function(imageFile) {
         return function(evt) {
-            wrap.src = evt.target.result;
+            modalWrap.src = evt.target.result;
+            $('#' + modal.id).modal();
         };
     })(file);
     reader.readAsDataURL(file);
+    //self.initJcrop();
   }, false);
 }
 
@@ -33,14 +43,16 @@ ImageCrop.prototype.setCoords = function(coords) {
 }
 
 ImageCrop.prototype.initJcrop = function() {
-  $.Jcrop(this.wrap, {
-    onChange: this.setCoords,
-    onSelect: this.setCoords,
+  var modal  = this.modal;
+  var modalWrap = this.modalWrap;
+  $.Jcrop(modal, {
+    onChange: ImageCrop.prototype.setCoords,
+    onSelect: ImageCrop.prototype.setCoords,
     /**
      * Passa o tamanho natural (ou real) da imagem para que as coordenadas sejam passadas de acordo
      * 
      * @see http://deepliquid.com/content/Jcrop_Sizing_Issues.html
      */
-    trueSize: [this.target.naturalWidth, this.target.naturalHeight]
+    trueSize: [modalWrap.naturalWidth, modalWrap.naturalHeight]
   });
 }
