@@ -62,6 +62,17 @@ class Responsavel extends CI_Controller
                     $this->input->post('estado', true),
                     $this->input->post('pais', true),
                 );
+
+                // Upload de foto
+                $config = array(
+                    'upload_path'   => base_url().'public/fotos',
+                    'allowed_types' => 'gif|jpeg|png',
+                    'max_size'      => '100',
+                    'max_width'     => '1920',
+                    'max_height'    => '1080',
+                );
+                $this->load->library('upload', $config);
+
                 $pessoa      = array(
                     $this->input->post('nome', true),
                     $this->input->post('telefone', true),
