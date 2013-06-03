@@ -8,19 +8,19 @@
         $(document).ready(function(){
             var crop = new ImageCrop(
                 document.getElementById('foto-handler'),
-                document.getElementById('img-foto')
+                document.getElementById('img-foto'),
+                document.getElementById('crop-modal')
             );
-            crop.setCropListener();
         });
       </script>
       <em>Tamanho ideal: 200x200</em>
-      <img src="<?php echo base_url()?>public/images/avatar_default.png" class="img-polaroid" id="img-foto" style="width:200px;height:200px;>
+      <img src="<?php echo base_url();?>public/images/avatar_default.png" class="img-polaroid" id="img-foto" style="width:200px;height:200px;>
       <form action="" enctype="multipart/form-data">
         <input type="file" name="foto" id="foto-handler" title="Editar Foto">
       </form>
     </div>
     <div class="span9">
-      <form class="form-horizontal" action="<?php echo site_url('responsavel/cadastrarResponsavel')?>" method="POST" enctype="multipar/form-data">
+      <form class="form-horizontal" action="<?php echo site_url('responsavel/cadastrarResponsavel');?>" method="POST" enctype="multipar/form-data">
         <div class="control-group">
           <label class="control-label" for="nome">Nome</label>
           <div class="controls">
@@ -133,5 +133,20 @@
         </div>
       </form>
     </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal hide fade" id="crop-modal">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>Cortar Imagem</h3>
+  </div>
+  <div class="modal-body" id="modalBody">
+    <img class="img-polaroid">
+  </div>
+  <div class="modal-footer">
+    <button data-dismiss="modal" class="btn">Nao cortar</button>
+    <a href="#" class="btn btn-primary">Cortar</a>
   </div>
 </div>
