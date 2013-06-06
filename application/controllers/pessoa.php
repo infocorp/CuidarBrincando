@@ -5,19 +5,6 @@ class Pessoa extends CI_Controller
         parent::__construct();
         $this->load->model('pessoa_model');
         $this->load->helper('url_helper');
-        $this->load->library(array ('form_validation', 'session'));
-        $this->form_validation->set_rules('nome', 'Nome', 'required|max_length[255]');
-        $this->form_validation->set_rules('dataNascimento', 'Data de Nascimento', 'required|max_length[10]');
-        $this->form_validation->set_rules('cpf', 'CPF', 'max_length[15]');
-        $this->form_validation->set_rules('identidade', 'Identidade', 'max_length[15]');
-        $this->form_validation->set_rules('tituloEleitor', 'Titulo de Eleitor', 'max_length[15]');
-        $this->form_validation->set_rules('apelido', 'Apelido', 'max_length[50]');
-        $this->form_validation->set_rules('foto', 'Foto', 'max_length[45]');//Arrumar o tamanho no banco
-        $this->form_validation->set_rules('sexo', 'Sexo', 'validaSexo');
-        $this->form_validation->set_rules('cor', 'Cor', 'validaCor');
-        $this->form_validation->set_rules('escolaridade', 'validaEscolaridade');
-        $this->form_validation->set_message('required', 'O Campo %s é obrigatório!');
-        
     }
     public function cadastrarPessoa()
     {

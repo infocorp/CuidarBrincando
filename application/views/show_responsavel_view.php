@@ -10,7 +10,7 @@
             <div id="myTabContent" class="tab-content">
                 <!-- INFORMACOES DE PESSOA -->
                 <div class="tab-pane active in" id="pessoa">
-                    não ta pronto, volte mais tarde, porra                
+                    não ta pronto, volte mais tarde                
                 </div>
                 <!-- INFORMACOES DE ENDERECO -->
                 <div class="tab-pane fade" id="endereco">

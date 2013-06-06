@@ -7,6 +7,9 @@
     <?php if (isset($erro)):?>
         <div class="alert alert-error"><?php echo $erro?></div>
     <?php endif?>
+    <?php if ($this->session->flashdata('create_feedback')):?>
+        <div class="alert alert-success"><?php echo $this->session->flashdata('create_feedback')?></div>
+    <?php endif;?>
     <?php if (isset($responsaveis)):?>
     <table class="table">
         <thead>

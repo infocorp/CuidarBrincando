@@ -1,5 +1,5 @@
 <div class="container">
-  <form class="form-horizontal" action="<?php echo site_url('responsavel/cadastrarResponsavel');?>" method="POST" enctype="multipart/form-data">
+  <form class="form-horizontal" action="<?php echo site_url('responsavel/cadastrarResponsavel');?>" method="POST" enctype="multipar/form-data">
   <div class="row">
     <div class="span3">
       <link rel="stylesheet" href="<?php echo base_url()?>public/jcrop/css/jquery.Jcrop.min.css">
@@ -16,11 +16,10 @@
         });
       </script>
       <em>Tamanho ideal: 200x200</em>
-      <img src="<?php echo base_url();?>public/images/avatar_default.png" class="img-polaroid" id="img-foto" style="width:200px;height:200px;">
+      <img src="
+        <?php echo isset($foto) ? base_url() . 'public/fotos/' . $foto : base_url() . 'public/images/avatar_default.png';?>
+      " class="img-polaroid" id="img-foto" style="width:200px;height:200px;">
       <input type="file" name="foto" id="foto-handler" title="Editar Foto">
-      <?php if (isset($uploadError)):?>
-        <div class="alert alert-error"><?php echo $uploadError;?></div>
-      <?php endif;?>
     </div>
     <div class="span9">
         <input type="hidden" name="x" id="x">
@@ -32,34 +31,31 @@
         <div class="control-group">
           <label class="control-label" for="nome">Nome</label>
           <div class="controls">
-            <input value="<?php echo set_value('nome');?>" type="text" name="nome" placeholder="Nome"><i class="icon-asterisk"></i>
-            <?php echo form_error('nome');?>
+            <input type="text" name="nome" placeholder="Nome" value="<?php echo isset($responsavel->nome) ? $responsavel->nome : ''?>">
           </div>
         </div>
         <div class="control-group">
           <label class="control-label" for="telefone">Telefone</label>
           <div class="controls">
-            <input value="<?php echo set_value('telefone');?>" type="text" name="telefone" placeholder="Telefone">
+            <input type="text" name="telefone" placeholder="Telefone" value="<?php echo isset($responsavel->telefone) ? $responsavel->telefone : ''?>">
           </div>
         </div>
         <div class="control-group">
           <label class="control-label" for="apelido">Apelido</label>
           <div class="controls">
-            <input value="<?php echo set_value('apelido');?>" type="text" name="apelido" placeholder="Apelido">
-            <?php echo form_error('apelido');?>
+            <input type="text" name="apelido" placeholder="Apelido" value="<?php echo isset($responsavel->apelido) ? $responsavel->apelido : ''?>">
           </div>
         </div>
         <div class="control-group">
           <label class="control-label" for="dataNascimento">Data de Nascimento</label>
           <div class="controls">
-            <input value="<?php echo set_value('dataNascimento');?>" type="text" name="dataNascimento" placeholder="Data de Nascimento"><i class="icon-asterisk"></i>
-            <?php echo form_error('dataNascimento')?>
+            <input type="text" name="dataNascimento" placeholder="Data de Nascimento" value="<?php echo isset($responsavel->dataNascimento) ? $responsavel->dataNascimento : ''?>">
           </div>
         </div>
         <div class="control-group">
           <label class="control-label" for="sexo">Sexo</label>
           <div class="controls">
-            <select value="<?php echo set_value('sexo');?>" name="sexo"><i class="icon-asterisk"></i>
+            <select name="sexo">
               <option value="M">Masculino</option>
               <option value="F">Feminino</option>
               <option value="I">Outro</option>
@@ -69,7 +65,7 @@
         <div class="control-group">
           <label class="control-label" for="cor">Cor</label>
           <div class="controls">
-            <select value="<?php echo set_value('cor');?>" name="cor"><i class="icon-asterisk"></i>
+            <select name="cor">
               <option value="PR">Preto</option>
               <option value="PA">Pardo</option>
               <option value="AM">Amarelo</option>
@@ -80,7 +76,7 @@
         <div class="control-group">
           <label class="control-label" for="escolaridade">Escolaridade</label>
           <div class="controls">
-            <select value="<?php echo set_value('escolaridade');?>" name="escolaridade"><i class="icon-asterisk"></i>
+            <select name="escolaridade">
               <option value="N">Nenhuma</option>
               <option value="FI">Fundamental Incompleto</option>
               <option value="F">Fundamental Completo</option>
@@ -94,28 +90,25 @@
         <div class="control-group">
           <label class="control-label" for="identidade">Identidade</label>
           <div class="controls">
-            <input value="<?php echo set_value('identidade');?>" type="text" name="identidade" placeholder="Identidade">
-            <?php echo form_error('identidade');?>
+            <input type="text" name="identidade" placeholder="Identidade" value="<?php echo isset($responsavel->identidade) ? $responsavel->identidade : ''?>">
           </div>
         </div>
         <div class="control-group">
           <label class="control-label" for="cpf">CPF</label>
           <div class="controls">
-            <input value="<?php echo set_value('cpf');?>" type="text" name="cpf" placeholder="CPF">
-            <?php echo form_error('cpf');?>
+            <input type="text" name="cpf" placeholder="CPF" value="<?php echo isset($responsavel->cpf) ? $responsavel->cpf : ''?>">
           </div>
         </div>
         <div class="control-group">
           <label class="control-label" for="tituloEleitor">Titulo de Eleitor</label>
           <div class="controls">
-            <input value="<?php echo set_value('tituloEleitor');?>" type="text" name="tituloEleitor" placeholder="Titulo de Eleitor">
-            <?php echo form_error('tituloEleitor');?>
+            <input type="text" name="tituloEleitor" placeholder="Titulo de Eleitor" value="<?php echo isset($responsavel->tituloEleitor) ? $responsavel->tituloEleitor : ''?>">
           </div>
         </div>
         <div class="control-group">
           <label class="control-label" for="ajudaFamilia">Ajuda da familia</label>
           <div class="controls">
-            <select value="<?php echo set_value('ajudaFamilia');?>" name="ajudaFamilia">
+            <select name="ajudaFamilia">
               <option value="N">Nunca</option>
               <option value="A">As vezes</option>
               <option value="S">Sempre</option>
@@ -123,33 +116,21 @@
           </div>
         </div>
         <div class="control-group">
-          <label class="control-label" for="beneficios">Benefícios</label>
-          <div class="controls">
-            <select value="<?php echo set_value('beneficios');?>" name="beneficios">
-              <option value="N">Nunca</option>
-              <option value="F">Forte</option>
-              <option value="M">Médio</option>
-              <option value="FA">Fraco</option>
-            </select>
-          </div>
-        </div>
-        <div class="control-group">
           <label class="control-label" for="renda">Renda</label>
           <div class="controls">
-            <input value="<?php echo set_value('renda');?>" type="text" name="renda" placeholder="Renda">
+            <input type="text" name="renda" placeholder="Renda" value="<?php echo isset($responsavel->renda) ? $responsavel->renda : ''?>">
           </div>
         </div>
         <div class="control-group">
           <label class="control-label" for="situacaoPsicologica">Situacao Psicologica</label>
           <div class="controls">
-            <textarea name="situacaoPsicologica" cols="30" rows="10"><?php echo set_value('situacaoPsicologica');?></textarea>
+            <textarea name="situacaoPsicologica" cols="30" rows="10"></textarea>
           </div>
         </div>
         <div class="control-group">
           <label class="control-label" for="email">Email</label>
           <div class="controls">
-            <input value="<?php echo set_value('email');?>" type="text" name="email" placeholder="Email">
-            <?php echo form_error('email');?>
+            <input type="text" name="email" placeholder="Email" value="<?php echo isset($responsavel->email) ? $responsavel->email : ''?>">
           </div>
         </div>
         <div class="control-group">
